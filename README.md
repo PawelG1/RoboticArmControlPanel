@@ -17,7 +17,8 @@ This project was created as part of coursework for .NET programming classes. It 
 3. Use the control panel to move the robotic arm, monitor sensors, or execute automated movements.
 
 ## Requirements
-- Robotic Arm created by me :P //source files of code for ESP uC will be added in future
+- Robotic Arm created by me :P 
+    *(Source files of the ESP microcontroller code will be added in the future.)*
 - .NET Framework 4.7.2 or later
 
 ## Video
