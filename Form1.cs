@@ -25,9 +25,17 @@ namespace espControl1
         {
             InitializeComponent();
             // Inicjalizacja portu szeregowego
-            robotArm = new RobotControl(ports_combo, received_rtb); // inicjalizacja obiektu typu RobotControl do komunikacji
-                                                                    // z mikrokontrolerem esp32 za pomoca polaczenia szeregowego
-                                                                    //nie obsluzone jeszcze przyciski wiec zostaja wylaczone
+            try
+            {
+                robotArm = new RobotControl(ports_combo, received_rtb); // inicjalizacja obiektu typu RobotControl do komunikacji
+                                                                        // z mikrokontrolerem esp32 za pomoca polaczenia szeregowego
+                                                                        //nie obsluzone jeszcze przyciski wiec zostaja wylaczone
+            }catch (Exception ex)
+            {
+                MessageBox.Show($"Serial port initialization failed: {ex.Message}");
+            }
+
+
             Cartesian_bt.Enabled = false;
             
 
@@ -37,8 +45,14 @@ namespace espControl1
         {
             //wyslanie polecenia wpisanego w pole txt do uC Esp32 
             string command = sendMessage_tb.Text;
-            robotArm.sendCommand(command); // wyslanie polecenia API esp32 ??
-            sendMessage_tb.Text = ""; //wyczyszczenie pola do wpisywania polecen
+            try
+            {
+                robotArm.sendCommand(command); // wyslanie polecenia API esp32 
+                sendMessage_tb.Text = ""; //wyczyszczenie pola do wpisywania polecen
+            }catch(Exception ex2)
+            {
+                MessageBox.Show($"Send command failed: {ex2.Message}");
+            }
 
         }
 
@@ -64,8 +78,16 @@ namespace espControl1
 
         private void disconnect_bt_Click(object sender, EventArgs e)
         {
-            robotArm.Close();//zamkniecie polaczenia z esp32
-            ports_combo.Items.Clear();// wyczyszczenie listy combo box
+            try
+            {
+                robotArm.Close();//zamkniecie polaczenia z esp32
+                ports_combo.Items.Clear();// wyczyszczenie listy combo box
+            }
+            catch(Exception ex3)
+            {
+                MessageBox.Show($"disconnecting failed: {ex3.Message}\n");
+            }
+            
 
         }
 
@@ -93,9 +115,16 @@ namespace espControl1
         {
             if(robotArm.isConnected == true)
             {
-                FormJointControl formJC = new FormJointControl(this, robotArm); //utworzenie formularza do sterowania przegubami, 
-                Hide();
-                formJC.Show();
+                try
+                {
+                    FormJointControl formJC = new FormJointControl(this, robotArm); //utworzenie formularza do sterowania przegubami, 
+                    Hide();
+                    formJC.Show();
+                }catch(Exception eee)
+                {
+                    MessageBox.Show(eee.Message);
+                }
+                
             }
             else
             {
@@ -106,8 +135,15 @@ namespace espControl1
 
         private void button4_Click(object sender, EventArgs e)
         {
-            robotArm.Close();
-            Application.Exit(); //zamkniecie wszytskich formularzy
+            try
+            {
+                robotArm.Close();
+                Application.Exit(); //zamkniecie wszytskich formularzy
+            }catch(Exception ex3)
+            {
+                MessageBox.Show($"Failed on closing: {ex3.Message}");
+            }
+            
 
         }
 
@@ -119,15 +155,19 @@ namespace espControl1
 
         private void refresh_bt_Click(object sender, EventArgs e)
         {
-            
-            ports_combo.Items.Clear();// wyczyszczenie listy combo box
-            String[] ports = robotArm.listPorts();
-            ports_combo.Items.AddRange(ports);// dodanie portow do ComboBox
-            if(ports_combo.Items.Count >0) // jesli wykryto jakiekolwiek porty
+            try
             {
-                ports_combo.SelectedIndex = 0; //wybranie domyslnie pierwszego dostepnego portu
+                ports_combo.Items.Clear();// wyczyszczenie listy combo box
+                String[] ports = robotArm.listPorts();
+                ports_combo.Items.AddRange(ports);// dodanie portow do ComboBox
+                if (ports_combo.Items.Count > 0) // jesli wykryto jakiekolwiek porty
+                {
+                    ports_combo.SelectedIndex = 0; //wybranie domyslnie pierwszego dostepnego portu
+                }
+            }catch(Exception ee)
+            {
+                MessageBox.Show($"cannot refresh:{ee.Message}");
             }
-            
             
         }
 
@@ -135,9 +175,16 @@ namespace espControl1
         {
             if (robotArm.isConnected == true)
             {
-                FormTeachMode formTM = new FormTeachMode(this, robotArm); //utworzenie formularza do sterowania przegubami, 
-                Hide();
-                formTM.Show();
+                try
+                {
+                    FormTeachMode formTM = new FormTeachMode(this, robotArm); //utworzenie formularza do sterowania przegubami, 
+                    Hide();
+                    formTM.Show();
+                }catch(Exception eee)
+                {
+                    MessageBox.Show($"cannot enter teach mode: {eee.Message}");
+                }
+                
             }
             else
             {
