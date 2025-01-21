@@ -36,7 +36,7 @@ namespace espControl1
             }
 
 
-            Cartesian_bt.Enabled = false;  // TODO: zamknac
+            //Cartesian_bt.Enabled = false;  // TODO: zamknac
             
 
         }
@@ -149,7 +149,9 @@ namespace espControl1
 
         private void button5_Click(object sender, EventArgs e)
         {
-            
+            //
+            Visualization visuForm = new Visualization(45, 82); //utowrzenie okna do wizualizacji pracy ramienia
+            visuForm.Show();
 
         }
 
