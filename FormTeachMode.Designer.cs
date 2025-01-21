@@ -49,6 +49,7 @@
             this.autoMode_bt = new System.Windows.Forms.Button();
             this.points_lv = new System.Windows.Forms.ListView();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.visuMovement_bt = new System.Windows.Forms.Button();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grip_trb)).BeginInit();
             this.groupBox3.SuspendLayout();
@@ -240,18 +241,22 @@
             // addPos_bt
             // 
             this.addPos_bt.BackColor = System.Drawing.Color.DodgerBlue;
-            this.addPos_bt.Location = new System.Drawing.Point(12, 323);
+            this.addPos_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.980198F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.addPos_bt.ForeColor = System.Drawing.SystemColors.Control;
+            this.addPos_bt.Location = new System.Drawing.Point(6, 372);
             this.addPos_bt.Name = "addPos_bt";
-            this.addPos_bt.Size = new System.Drawing.Size(207, 45);
+            this.addPos_bt.Size = new System.Drawing.Size(309, 45);
             this.addPos_bt.TabIndex = 12;
-            this.addPos_bt.Text = "Add point";
+            this.addPos_bt.Text = "Add Actual Point";
             this.addPos_bt.UseVisualStyleBackColor = false;
             this.addPos_bt.Click += new System.EventHandler(this.addPos_bt_Click);
             // 
             // autoMode_bt
             // 
             this.autoMode_bt.BackColor = System.Drawing.Color.DodgerBlue;
-            this.autoMode_bt.Location = new System.Drawing.Point(242, 323);
+            this.autoMode_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.980198F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.autoMode_bt.ForeColor = System.Drawing.Color.White;
+            this.autoMode_bt.Location = new System.Drawing.Point(12, 320);
             this.autoMode_bt.Name = "autoMode_bt";
             this.autoMode_bt.Size = new System.Drawing.Size(203, 45);
             this.autoMode_bt.TabIndex = 13;
@@ -265,7 +270,7 @@
             this.points_lv.HideSelection = false;
             this.points_lv.Location = new System.Drawing.Point(6, 19);
             this.points_lv.Name = "points_lv";
-            this.points_lv.Size = new System.Drawing.Size(309, 398);
+            this.points_lv.Size = new System.Drawing.Size(309, 347);
             this.points_lv.TabIndex = 14;
             this.points_lv.UseCompatibleStateImageBehavior = false;
             this.points_lv.View = System.Windows.Forms.View.List;
@@ -274,6 +279,7 @@
             // groupBox5
             // 
             this.groupBox5.Controls.Add(this.points_lv);
+            this.groupBox5.Controls.Add(this.addPos_bt);
             this.groupBox5.Location = new System.Drawing.Point(467, 15);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(321, 423);
@@ -281,14 +287,27 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Points:";
             // 
+            // visuMovement_bt
+            // 
+            this.visuMovement_bt.BackColor = System.Drawing.Color.DodgerBlue;
+            this.visuMovement_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.267326F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.visuMovement_bt.ForeColor = System.Drawing.Color.White;
+            this.visuMovement_bt.Location = new System.Drawing.Point(221, 320);
+            this.visuMovement_bt.Name = "visuMovement_bt";
+            this.visuMovement_bt.Size = new System.Drawing.Size(188, 45);
+            this.visuMovement_bt.TabIndex = 16;
+            this.visuMovement_bt.Text = "Robot orientation visualization";
+            this.visuMovement_bt.UseVisualStyleBackColor = false;
+            this.visuMovement_bt.Click += new System.EventHandler(this.visuMovement_bt_Click);
+            // 
             // FormTeachMode
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.visuMovement_bt);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.autoMode_bt);
-            this.Controls.Add(this.addPos_bt);
             this.Controls.Add(this.close_bt);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
@@ -337,5 +356,6 @@
         private System.Windows.Forms.Button autoMode_bt;
         private System.Windows.Forms.ListView points_lv;
         private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Button visuMovement_bt;
     }
 }

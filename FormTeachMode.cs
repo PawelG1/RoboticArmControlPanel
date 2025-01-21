@@ -107,5 +107,12 @@ namespace espControl1
         {
 
         }
+
+        private void visuMovement_bt_Click(object sender, EventArgs e)
+        {
+
+            Visualization visuForm = new Visualization(j1Rotation, j2Rotation); //utowrzenie okna do wizualizacji pracy ramienia
+            visuForm.Show();
+        }
     }
 }
