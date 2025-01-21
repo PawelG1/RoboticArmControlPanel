@@ -33,7 +33,13 @@ namespace espControl1
             robotArm.resetRobot();// wyresetowanie przegubow robota
             sensingTh = robotArm.readingSensorsThread(); // przypisanie watku do nasluchu komunikatow o stanie sensora
             sensingTh.Start(); // uruchomienie watku do nasluchu
-            autoMode = new AutoMode(); 
+            autoMode = new AutoMode();
+
+            //przypisanie wartosci startowych poszczegolnych serv do trackbarow
+            baseRot_trb.Value = robotArm.baseServo.defaultPos;
+            j1Rot_trb.Value = robotArm.j1Servo.defaultPos;
+            j2Rot_trb.Value = robotArm.j2Servo.defaultPos;
+            grip_trb.Value = robotArm.gripperServo.defaultPos;
         }
 
         private void baseRot_trb_Scroll(object sender, EventArgs e)

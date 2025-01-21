@@ -27,6 +27,12 @@ namespace espControl1
             sensingTh = robotArm.readingSensorsThread();
             sensingTh.Start();
 
+            //przypisanie wartosci startowych poszczegolnych serv do trackbarow
+            baseRot_trb.Value = robotArm.baseServo.defaultPos;
+            j1Rot_trb.Value = robotArm.j1Servo.defaultPos;
+            j2Rot_trb.Value = robotArm.j2Servo.defaultPos;
+            grip_trb.Value = robotArm.gripperServo.defaultPos;
+                
         }
 
         private void RotBase_trb_Scroll(object sender, EventArgs e)
