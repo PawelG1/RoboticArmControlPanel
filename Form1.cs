@@ -44,8 +44,22 @@ namespace espControl1
 
         private void connect_bt_Click(object sender, EventArgs e)
         {
-            string selectedPort = ports_combo.SelectedItem.ToString(); // pobranie wybranego portu z 
-            robotArm.connect(selectedPort); // otwarcie polaczenia z wybranym portem
+            try
+            {
+                if(ports_combo.Items.Count > 0)//jesli wykryto jakiekowliek porty
+                {
+                    string selectedPort = ports_combo.SelectedItem.ToString(); // pobranie wybranego portu z 
+                    robotArm.connect(selectedPort); // otwarcie polaczenia z wybranym portem
+                }
+                else
+                {
+                    MessageBox.Show("No available ports to connect");
+                }
+            }catch (Exception ex)
+            {
+                MessageBox.Show($"Unable to connect: {ex}");
+            }
+           
         }
 
         private void disconnect_bt_Click(object sender, EventArgs e)
@@ -105,10 +119,15 @@ namespace espControl1
 
         private void refresh_bt_Click(object sender, EventArgs e)
         {
+            
             ports_combo.Items.Clear();// wyczyszczenie listy combo box
             String[] ports = robotArm.listPorts();
             ports_combo.Items.AddRange(ports);// dodanie portow do ComboBox
-            ports_combo.SelectedIndex = 0; //wybranie domyslnie pierwszego dostepnego portu
+            if(ports_combo.Items.Count >0) // jesli wykryto jakiekolwiek porty
+            {
+                ports_combo.SelectedIndex = 0; //wybranie domyslnie pierwszego dostepnego portu
+            }
+            
             
         }
 
