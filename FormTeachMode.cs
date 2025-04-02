@@ -28,7 +28,10 @@ namespace espControl1
         {
             mainForm = form1; //przypisanie formularza glownego menu do mainForm by umozliwic ponowne otwarcie menu
             InitializeComponent();
-            grip_trb.SetRange(55, 110); 
+            grip_trb.SetRange(55, 110); // ustawienie zakresu wartosci dla trackbara odpowiadajacego za chwytak
+            baseRot_trb.SetRange(0, 180);
+            j1Rot_trb.SetRange(0, 180);
+            j2Rot_trb.SetRange(0, 180);
             robotArm = rArm; // przypisanie przekazanaego obiektu RobotControl
             robotArm.resetRobot();// wyresetowanie przegubow robota
             sensingTh = robotArm.readingSensorsThread(); // przypisanie watku do nasluchu komunikatow o stanie sensora
