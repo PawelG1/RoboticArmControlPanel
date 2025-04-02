@@ -33,7 +33,7 @@ namespace espControl1
         public SerialComm(RichTextBox recBox)
         {
             receivingTb = recBox;
-            // onicjalizacja portu szeregowego
+            // inicjalizacja portu szeregowego
             serialPort = new SerialPort
             {
                 BaudRate = 115200,  // ustawienia szybkosci transmisji
@@ -49,7 +49,7 @@ namespace espControl1
 
         public SerialComm(string port)
         {
-            // onicjalizacja portu szeregowego
+            // inicjalizacja portu szeregowego
             serialPort = new SerialPort
             {
                 BaudRate = 115200,  // ustawienia szybkosci transmisji
