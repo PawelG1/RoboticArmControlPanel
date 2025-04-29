@@ -161,6 +161,7 @@ namespace espControl1
             {
                 ports_combo.Items.Clear();// wyczyszczenie listy combo box
                 String[] ports = robotArm.listPorts();
+                ports_combo.Items.Clear();// wyczyszczenie listy combo box
                 ports_combo.Items.AddRange(ports);// dodanie portow do ComboBox
                 if (ports_combo.Items.Count > 0) // jesli wykryto jakiekolwiek porty
                 {
