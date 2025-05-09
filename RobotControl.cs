@@ -53,10 +53,7 @@ namespace espControl1
         
         public void resetRobot() // wyresetowanie pozycji serwomechanizmow do pozycji wyjsciowej (bezpoeczniej)
         {
-            baseServo.reset(); // reset pozycji serva obracajacego podstawa
-            j1Servo.reset();
-            j2Servo.reset();
-            gripperServo.reset();
+            this.sendCommand("SAFE");
         }
 
         public Thread readingSensorsThread()

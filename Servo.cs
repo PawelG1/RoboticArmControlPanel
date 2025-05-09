@@ -39,8 +39,10 @@ namespace espControl1
             this.actualPos = position;
         }
 
+        [Obsolete("metoda reset powinna nie byc uzywana na rzecz metody resetRobot wywolanej na calym obiekcie klasy RobotControl")]
         public void reset()
         {
+
             move(defaultPos); // obrot serva na pozycje domyslna
         }
 
