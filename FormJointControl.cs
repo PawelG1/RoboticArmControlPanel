@@ -35,7 +35,12 @@ namespace espControl1
             j1Rot_trb.Value = robotArm.j1Servo.GetServoPos();
             j2Rot_trb.Value = robotArm.j2Servo.GetServoPos();
             grip_trb.Value = robotArm.gripperServo.GetServoPos();
-                
+            //przypisanie tych watosci tez do label obok trackbar
+            baseRot_tb.Text = baseRot_trb.Value.ToString();
+            j1Rot_tb.Text = j1Rot_trb.Value.ToString();
+            j2Rot_tb.Text = j2Rot_trb.Value.ToString();
+            grp_tb.Text = grip_trb.Value.ToString();
+
         }
 
         private void RotBase_trb_Scroll(object sender, EventArgs e)

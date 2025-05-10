@@ -13,11 +13,16 @@ namespace espControl1
 
         class Point
         {
+            private int _idx;
             private int _baseServoPos; // pozycja serva w danym punkcie
             private int _j1ServoPos; // Pozycja serwa J1 w danym punkcie
             private int _j2ServoPos; // Pozycja serwa J2 w danym punkcie
             private int _gripperServoPos; // kat serwa chwytaka w danym punkcie
 
+            public int getIdx
+            {
+                get { return _idx; }
+            }
             public int baseServoPos
             {
                 get { return _baseServoPos; }
@@ -36,8 +41,9 @@ namespace espControl1
             }
 
 
-            public Point(int baseP, int j1P, int j2P, int gripP) // konstruktor zapisujacy katy obrotu kazdego z serw w punkcie
+            public Point(int i, int baseP, int j1P, int j2P, int gripP) // konstruktor zapisujacy katy obrotu kazdego z serw w punkcie
             {
+                this._idx = i;
                 this._baseServoPos = baseP;
                 this._j1ServoPos = j1P;
                 this._j2ServoPos = j2P;
@@ -47,7 +53,18 @@ namespace espControl1
 
         public void addPoint(int baseP, int j1P, int j2P, int gripP)
         {
-            pointsList.Add(new Point(baseP, j1P, j2P, gripP));
+            int idx = pointsList.Count;
+            pointsList.Add(new Point(idx, baseP, j1P, j2P, gripP));
+        }
+
+        public void removePoint(int idx)
+        {
+            pointsList.RemoveAll(p => p.getIdx == idx);
+        }
+
+        public int getLastIdx()
+        {
+            return pointsList.Count-1;
         }
 
         public async Task LoopWork(RobotControl robotArm) //metoda asynchroniczna by nie blokowac glownego watku, sterująca pracą robota t.j. iteruje po punktach

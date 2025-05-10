@@ -30,7 +30,7 @@
         {
             this.close_bt = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.grp_tb = new System.Windows.Forms.TextBox();
+            this.grip_tb = new System.Windows.Forms.TextBox();
             this.grip_trb = new System.Windows.Forms.TrackBar();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -45,11 +45,16 @@
             this.baseRot_tb = new System.Windows.Forms.TextBox();
             this.baseRot_trb = new System.Windows.Forms.TrackBar();
             this.label1 = new System.Windows.Forms.Label();
-            this.addPos_bt = new System.Windows.Forms.Button();
             this.autoMode_bt = new System.Windows.Forms.Button();
             this.points_lv = new System.Windows.Forms.ListView();
+            this.idx = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.values = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.visuMovement_bt = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.rmPointBtn = new System.Windows.Forms.Button();
+            this.addPos_bt = new System.Windows.Forms.Button();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grip_trb)).BeginInit();
             this.groupBox3.SuspendLayout();
@@ -64,9 +69,11 @@
             // close_bt
             // 
             this.close_bt.BackColor = System.Drawing.Color.Red;
-            this.close_bt.Location = new System.Drawing.Point(12, 409);
+            this.close_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.841584F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.close_bt.ForeColor = System.Drawing.SystemColors.Control;
+            this.close_bt.Location = new System.Drawing.Point(12, 475);
             this.close_bt.Name = "close_bt";
-            this.close_bt.Size = new System.Drawing.Size(130, 29);
+            this.close_bt.Size = new System.Drawing.Size(130, 45);
             this.close_bt.TabIndex = 11;
             this.close_bt.Text = "Return";
             this.close_bt.UseMnemonic = false;
@@ -75,7 +82,7 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.grp_tb);
+            this.groupBox4.Controls.Add(this.grip_tb);
             this.groupBox4.Controls.Add(this.grip_trb);
             this.groupBox4.Controls.Add(this.label4);
             this.groupBox4.Location = new System.Drawing.Point(12, 234);
@@ -85,12 +92,12 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Gripper";
             // 
-            // grp_tb
+            // grip_tb
             // 
-            this.grp_tb.Location = new System.Drawing.Point(339, 32);
-            this.grp_tb.Name = "grp_tb";
-            this.grp_tb.Size = new System.Drawing.Size(80, 20);
-            this.grp_tb.TabIndex = 3;
+            this.grip_tb.Location = new System.Drawing.Point(339, 32);
+            this.grip_tb.Name = "grip_tb";
+            this.grip_tb.Size = new System.Drawing.Size(80, 20);
+            this.grip_tb.TabIndex = 3;
             // 
             // grip_trb
             // 
@@ -238,25 +245,12 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Servo Position: ";
             // 
-            // addPos_bt
-            // 
-            this.addPos_bt.BackColor = System.Drawing.Color.DodgerBlue;
-            this.addPos_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.980198F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.addPos_bt.ForeColor = System.Drawing.SystemColors.Control;
-            this.addPos_bt.Location = new System.Drawing.Point(6, 372);
-            this.addPos_bt.Name = "addPos_bt";
-            this.addPos_bt.Size = new System.Drawing.Size(309, 45);
-            this.addPos_bt.TabIndex = 12;
-            this.addPos_bt.Text = "Add Actual Point";
-            this.addPos_bt.UseVisualStyleBackColor = false;
-            this.addPos_bt.Click += new System.EventHandler(this.addPos_bt_Click);
-            // 
             // autoMode_bt
             // 
             this.autoMode_bt.BackColor = System.Drawing.Color.DodgerBlue;
             this.autoMode_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.980198F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.autoMode_bt.ForeColor = System.Drawing.Color.White;
-            this.autoMode_bt.Location = new System.Drawing.Point(12, 320);
+            this.autoMode_bt.Location = new System.Drawing.Point(342, 475);
             this.autoMode_bt.Name = "autoMode_bt";
             this.autoMode_bt.Size = new System.Drawing.Size(203, 45);
             this.autoMode_bt.TabIndex = 13;
@@ -266,6 +260,9 @@
             // 
             // points_lv
             // 
+            this.points_lv.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.idx,
+            this.values});
             this.points_lv.GridLines = true;
             this.points_lv.HideSelection = false;
             this.points_lv.Location = new System.Drawing.Point(6, 19);
@@ -276,10 +273,13 @@
             this.points_lv.View = System.Windows.Forms.View.List;
             this.points_lv.SelectedIndexChanged += new System.EventHandler(this.points_lv_SelectedIndexChanged);
             // 
+            // idx
+            // 
+            this.idx.Tag = "IDX";
+            // 
             // groupBox5
             // 
             this.groupBox5.Controls.Add(this.points_lv);
-            this.groupBox5.Controls.Add(this.addPos_bt);
             this.groupBox5.Location = new System.Drawing.Point(467, 15);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(321, 423);
@@ -292,7 +292,7 @@
             this.visuMovement_bt.BackColor = System.Drawing.Color.DodgerBlue;
             this.visuMovement_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.267326F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.visuMovement_bt.ForeColor = System.Drawing.Color.White;
-            this.visuMovement_bt.Location = new System.Drawing.Point(221, 320);
+            this.visuMovement_bt.Location = new System.Drawing.Point(148, 475);
             this.visuMovement_bt.Name = "visuMovement_bt";
             this.visuMovement_bt.Size = new System.Drawing.Size(188, 45);
             this.visuMovement_bt.TabIndex = 16;
@@ -300,12 +300,75 @@
             this.visuMovement_bt.UseVisualStyleBackColor = false;
             this.visuMovement_bt.Click += new System.EventHandler(this.visuMovement_bt_Click);
             // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.DodgerBlue;
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.980198F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.button1.ForeColor = System.Drawing.SystemColors.Control;
+            this.button1.Image = global::espControl1.Properties.Resources.arrow_down;
+            this.button1.Location = new System.Drawing.Point(380, 390);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(65, 45);
+            this.button1.TabIndex = 19;
+            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button1.UseVisualStyleBackColor = false;
+            // 
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.Color.DodgerBlue;
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.980198F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.button2.ForeColor = System.Drawing.SystemColors.Control;
+            this.button2.Image = global::espControl1.Properties.Resources.arrow_up;
+            this.button2.Location = new System.Drawing.Point(309, 390);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(65, 45);
+            this.button2.TabIndex = 18;
+            this.button2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // rmPointBtn
+            // 
+            this.rmPointBtn.BackColor = System.Drawing.Color.DodgerBlue;
+            this.rmPointBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.980198F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.rmPointBtn.ForeColor = System.Drawing.SystemColors.Control;
+            this.rmPointBtn.Image = global::espControl1.Properties.Resources.rm_point;
+            this.rmPointBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.rmPointBtn.Location = new System.Drawing.Point(157, 390);
+            this.rmPointBtn.Name = "rmPointBtn";
+            this.rmPointBtn.Size = new System.Drawing.Size(141, 45);
+            this.rmPointBtn.TabIndex = 17;
+            this.rmPointBtn.Text = "Remove Selected";
+            this.rmPointBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.rmPointBtn.UseVisualStyleBackColor = false;
+            this.rmPointBtn.Click += new System.EventHandler(this.rmPointBtn_Click);
+            // 
+            // addPos_bt
+            // 
+            this.addPos_bt.BackColor = System.Drawing.Color.DodgerBlue;
+            this.addPos_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.980198F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.addPos_bt.ForeColor = System.Drawing.SystemColors.Control;
+            this.addPos_bt.Image = global::espControl1.Properties.Resources.add_circle_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24;
+            this.addPos_bt.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.addPos_bt.Location = new System.Drawing.Point(10, 390);
+            this.addPos_bt.Name = "addPos_bt";
+            this.addPos_bt.Size = new System.Drawing.Size(141, 45);
+            this.addPos_bt.TabIndex = 12;
+            this.addPos_bt.Text = "Add Point";
+            this.addPos_bt.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.addPos_bt.UseVisualStyleBackColor = false;
+            this.addPos_bt.Click += new System.EventHandler(this.addPos_bt_Click);
+            // 
             // FormTeachMode
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(804, 532);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.rmPointBtn);
             this.Controls.Add(this.visuMovement_bt);
+            this.Controls.Add(this.addPos_bt);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.autoMode_bt);
             this.Controls.Add(this.close_bt);
@@ -337,7 +400,7 @@
 
         private System.Windows.Forms.Button close_bt;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.TextBox grp_tb;
+        private System.Windows.Forms.TextBox grip_tb;
         private System.Windows.Forms.TrackBar grip_trb;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.GroupBox groupBox3;
@@ -357,5 +420,10 @@
         private System.Windows.Forms.ListView points_lv;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Button visuMovement_bt;
+        private System.Windows.Forms.ColumnHeader idx;
+        private System.Windows.Forms.ColumnHeader values;
+        private System.Windows.Forms.Button rmPointBtn;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button1;
     }
 }

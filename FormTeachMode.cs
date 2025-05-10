@@ -39,10 +39,17 @@ namespace espControl1
             autoMode = new AutoMode();
 
             //przypisanie wartosci startowych poszczegolnych serv do trackbarow
-            baseRot_trb.Value = robotArm.baseServo.defaultPos;
-            j1Rot_trb.Value = robotArm.j1Servo.defaultPos;
-            j2Rot_trb.Value = robotArm.j2Servo.defaultPos;
-            grip_trb.Value = robotArm.gripperServo.defaultPos;
+            Thread.Sleep(500);
+            baseRot_trb.Value = robotArm.baseServo.GetServoPos();
+            j1Rot_trb.Value = robotArm.j1Servo.GetServoPos();
+            j2Rot_trb.Value = robotArm.j2Servo.GetServoPos();
+            grip_trb.Value = robotArm.gripperServo.GetServoPos();
+            //przypisanie tych wartosci do labels obok track barow
+            baseRot_tb.Text = baseRot_trb.Value.ToString();
+            j1Rot_tb.Text = j1Rot_trb.Value.ToString();
+            j2Rot_tb.Text = j2Rot_trb.Value.ToString();
+            grip_tb.Text = grip_trb.Value.ToString();
+            
         }
 
         private void baseRot_trb_Scroll(object sender, EventArgs e)
@@ -69,7 +76,7 @@ namespace espControl1
         private void grip_trb_Scroll(object sender, EventArgs e)
         {
             gripper = grip_trb.Value;
-            grp_tb.Text = gripper.ToString();
+            grip_tb.Text = gripper.ToString();
             robotArm.gripperServo.move(gripper);
 
         }
@@ -92,7 +99,10 @@ namespace espControl1
         private void addPos_bt_Click(object sender, EventArgs e)
         {
             autoMode.addPoint(baseRotation, j1Rotation, j2Rotation, gripper); //dodanie punktu do interpolacji do listy punktow w obiekcie autoMode
-            points_lv.Items.Add($"base: {baseRotation}, joint1: {j1Rotation}, joint2: {j2Rotation}"); // dodanie punktu do listy punktow w gui (ListView)
+            ListViewItem point = new ListViewItem(autoMode.getLastIdx().ToString());
+            point.SubItems.Add($"base: {baseRotation}, joint1: {j1Rotation}, joint2: {j2Rotation}");// dodanie punktu do listy punktow w gui
+            //point_lv.Items.Add($"base: {baseRotation}, joint1: {j1Rotation}, joint2: {j2Rotation}"); // dodanie punktu do listy punktow w gui (ListView)
+            points_lv.Items.Add(point);
         }
 
         private void autoMode_bt_Click(object sender, EventArgs e)
@@ -103,7 +113,7 @@ namespace espControl1
 
         private void points_lv_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            
         }
 
         private void baseRot_tb_TextChanged(object sender, EventArgs e)
@@ -116,6 +126,23 @@ namespace espControl1
 
             Visualization visuForm = new Visualization(j1Rotation, j2Rotation); //utowrzenie okna do wizualizacji pracy ramienia
             visuForm.Show();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void rmPointBtn_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in points_lv.Items)
+            {
+                if (item.Selected)
+                {
+                    item.Remove();
+                    autoMode.removePoint(int.Parse(item.Text));
+                }
+            }
         }
     }
 }
