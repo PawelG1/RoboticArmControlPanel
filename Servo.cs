@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -30,14 +31,26 @@ namespace espControl1
 
         public void move(int desiredPos) //obrot serva na podana pozycje
         {
-            robotArm.sendCommand($"P{_servoPin} {desiredPos}deg"); //wyslanie polecenia z numerem pinu oraz docelowa pozycja
+            robotArm.sendCommand($"S{_servoPin} {desiredPos}deg"); //wyslanie polecenia z numerem pinu oraz docelowa pozycja
             updateServoPos(desiredPos); //nadpisanie info. o aktualnej poz. serwa
         }
-
+       
         private void updateServoPos(int position)//nadpisuje aktualna pozycje serva
         {
             this.actualPos = position;
         }
+
+
+        public int GetServoPos()
+        {
+            string resp = robotArm.SendCommandAndWait($"GET S{_servoPin}", 2000);
+            var ms = Regex.Matches(resp, @"-?\d+");
+            int angle = int.Parse(ms[ms.Count - 1].Value);
+            updateServoPos(angle);
+            return angle;
+        }
+
+
 
         [Obsolete("metoda reset powinna nie byc uzywana na rzecz metody resetRobot wywolanej na calym obiekcie klasy RobotControl")]
         public void reset()
