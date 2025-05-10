@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.LinkLabel;
 
 
 namespace espControl1
@@ -15,6 +17,12 @@ namespace espControl1
         //private string receivedMessage; 
         private RichTextBox receivingTb;
         private bool _isConnected = false; // stan czy udalo sie polaczyc z esp
+
+        // Do synchronizacji odpowiedzi:
+        private readonly object _lock = new object();
+        private string _syncResponse;
+        private readonly AutoResetEvent _responseEvent = new AutoResetEvent(false);
+        private string _expectedPinToken;
 
         //variables to store received sensors data
         private bool _proximity_sensor = false;// Flaga określająca stan czujnika zblizeniowego indukcujnego
@@ -87,7 +95,7 @@ namespace espControl1
         {
             string[] ports = Array.Empty<string>(); //pusta tablica typu string 
             try
-            {               
+            {
                 ports = SerialPort.GetPortNames();// pobranie dostepnych portow szeregowych i zapis do tablicy
                 if (ports.Length > 0)
                 {
@@ -149,39 +157,133 @@ namespace espControl1
             }
         }
 
+        private StringBuilder _recvBuf = new StringBuilder();
+
+        // w klasie SerialComm:
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             try
             {
-                // sdczyt pełnej linii
-                string receivedMessage = serialPort.ReadLine().Trim();
-                //
-                receivingTb.Invoke(new Action(() => { receivingTb.Text += receivedMessage+ "\n"; }));
-                //koniecze jest wykorzystanie invoke poniewaz kontrolki formularza dzialaja w innym watku i przy probie przypisania ich w tym watku wystepuje blad
-                //invoke powoduje ze metoda wywolana w nim wykona sie w watku w ktorym utworzona zostala kontrolka receivingTb
-                //jako argument do metody Invoke przekazany zostala nowa akcja w ktorej przekazujemy funkcje anonimowa zwracajaca wlasnie przypisanie odberanej
-                //wiadomosci do pola txt
-                //przez uzycie invoke przypisanie tekstu wystapilo w watku w ktorym utworzona zostala kontrolka
+                // 1) pobierz wszystkie aktualnie dostępne znaki
+                string chunk = serialPort.ReadExisting();
 
-                Console.WriteLine(receivedMessage);
-                if(receivedMessage == "S36 HIGH") //sprawdzenie czy otrzymano komunikat o stanie wysokim sensora
+                lock (_recvBuf)
                 {
-                    _proximity_sensor = true;
-                }else if(receivedMessage == "S36 LOW")
-                {
-                    _proximity_sensor = false;
+                    _recvBuf.Append(chunk);
+                    string all = _recvBuf.ToString();
+                    int idx;
+
+                    // 2) rozbijamy po '\n'
+                    while ((idx = all.IndexOf('\n')) >= 0)
+                    {
+                        string line = all.Substring(0, idx).Trim('\r', '\n');
+                        all = all.Substring(idx + 1);
+
+                        // 3) zawsze doklejaj do UI
+                        receivingTb.Invoke((Action)(() =>
+                            receivingTb.AppendText(line + Environment.NewLine)
+                        ));
+                        Console.WriteLine(line);
+
+                        // 4) jeżeli czekamy na GET S{pin} – poszukaj regexem w tej linii
+                        if (_expectedPinToken != null)
+                        {
+                            string pattern = $@"S{_expectedPinToken}\s+(-?\d+)deg";
+                            var m = System.Text.RegularExpressions.Regex.Match(line, pattern);
+                            if (m.Success)
+                            {
+                                // odtwórz kanoniczną formę i powiadom wątek
+                                string resp = $"S{_expectedPinToken} {m.Groups[1].Value}deg";
+                                lock (_lock)
+                                {
+                                    _syncResponse = resp;
+                                    _responseEvent.Set();
+                                }
+                            }
+                        }
+
+                        // 5) czujnik proximity
+                        if (line == "S36 HIGH") _proximity_sensor = true;
+                        else if (line == "S36 LOW") _proximity_sensor = false;
+                    }
+
+                    // 6) zostaw niekompletny ogon
+                    _recvBuf.Clear();
+                    _recvBuf.Append(all);
                 }
-
-            }
-            catch (TimeoutException)
-            {
-                MessageBox.Show("Timeout");
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Błąd podczas odbierania danych: {ex.Message}");
             }
         }
+
+
+
+
+
+
+
+        /// <summary>
+        /// Wysyła komendę i czeka na jedną linię odpowiedzi lub aż minie timeout.
+        /// </summary>
+        /// <summary>
+        /// Wysyła komendę i blokuje bezpośrednio na ReadLine() dopóki nie dostanie linii z "S{pin} ...deg"
+        /// </summary>
+        public string SendCommandAndWait(string command, int timeoutMs = 2000)
+        {
+            if (!serialPort.IsOpen)
+                throw new InvalidOperationException("Port nie jest otwarty.");
+
+            // 1) Wyrzuć wszystkie zalegające bajty (echo SAFE, echa move itp.)
+            serialPort.DiscardInBuffer();
+
+            // 2) Ustaw timeout na ReadLine
+            serialPort.ReadTimeout = timeoutMs;
+
+            // 3) Wyślij GET-a (np. "GET S23")
+            serialPort.WriteLine(command);
+
+            // 4) Oblicz deadline
+            var deadline = DateTime.UtcNow.AddMilliseconds(timeoutMs);
+            // 5) Token pinu, np. "S23"
+            string pinToken = command.Substring(4).Trim();
+
+            while (DateTime.UtcNow < deadline)
+            {
+                string line;
+                try
+                {
+                    // to zablokuje do momentu otrzymania '\n' lub timeoutu
+                    line = serialPort.ReadLine().Trim();
+                }
+                catch (TimeoutException)
+                {
+                    break;
+                }
+
+                // 6) Filtrujemy tylko tę jedną linijkę, która kończy się "deg"
+                //    i zawiera dokładnie nasz pinToken ("S23").
+                if (line.StartsWith(pinToken, StringComparison.Ordinal) &&
+                    line.EndsWith("deg", StringComparison.Ordinal))
+                {
+                    return line;
+                }
+                // inne linie (SAFE-logi, Servo-logi) ignorujemy i czytamy dalej
+            }
+
+            throw new TimeoutException(
+                $"Brak odpowiedzi „{pinToken} …deg” w ciągu {timeoutMs} ms.");
+        }
+
+
+
+
+
+
+
+
+
 
 
     }

@@ -26,15 +26,15 @@ namespace espControl1
             j1Rot_trb.SetRange(0, 180);
             j2Rot_trb.SetRange(0, 180);
             robotArm = rArm; // przypisanie przekazanaego obiektu RobotControl
-            robotArm.resetRobot();// wyresetowanie przegubow robota
             sensingTh = robotArm.readingSensorsThread();
             sensingTh.Start();
-
+            robotArm.resetRobot();// wyresetowanie przegubow robota
             //przypisanie wartosci startowych poszczegolnych serv do trackbarow
-            baseRot_trb.Value = robotArm.baseServo.defaultPos;
-            j1Rot_trb.Value = robotArm.j1Servo.defaultPos;
-            j2Rot_trb.Value = robotArm.j2Servo.defaultPos;
-            grip_trb.Value = robotArm.gripperServo.defaultPos;
+            Thread.Sleep(500);
+            baseRot_trb.Value = robotArm.baseServo.GetServoPos();
+            j1Rot_trb.Value = robotArm.j1Servo.GetServoPos();
+            j2Rot_trb.Value = robotArm.j2Servo.GetServoPos();
+            grip_trb.Value = robotArm.gripperServo.GetServoPos();
                 
         }
 
