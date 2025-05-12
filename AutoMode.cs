@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace espControl1
 {
@@ -67,28 +68,73 @@ namespace espControl1
             return pointsList.Count-1;
         }
 
-        public async Task LoopWork(RobotControl robotArm) //metoda asynchroniczna by nie blokowac glownego watku, sterująca pracą robota t.j. iteruje po punktach
+        public async Task LoopWork(RobotControl robotArm, CancellationToken cancellationToken) //metoda asynchroniczna by nie blokowac glownego watku, sterująca pracą robota t.j. iteruje po punktach
         {
             try
             {
+                while (true)
+                {
+                    foreach (Point point in pointsList) // dla kazdego punktu w liscie
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            Console.WriteLine("Praca automatyczna zatrzymana przez flagę Stop.");
+                            break;
+                        }
+
+                        robotArm.baseServo.move(point.baseServoPos); // ustawienie serva na pozycji podanej w punkcie
+                        robotArm.j1Servo.move(point.j1ServoPos);
+                        robotArm.j2Servo.move(point.j2ServoPos);
+                        robotArm.gripperServo.move(point.gripperServoPos);
+
+                        await Task.Delay(3000, cancellationToken); // odczekanie by robot byl w stanie osiagnac zadana pozycje
+                    }
+
+                }
+               
+            }
+            catch (TaskCanceledException)
+            {
+                Console.WriteLine("Praca automatyczna została anulowana.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Wystąpił błąd w pracy automatycznej: {ex}");
+            }
+        }
+
+        public async Task OneIteration(RobotControl robotArm, CancellationToken cancellationToken) //metoda asynchroniczna by nie blokowac glownego watku, sterująca pracą robota t.j. iteruje po punktach
+        {
+            try
+            {
+                
                 foreach (Point point in pointsList) // dla kazdego punktu w liscie
                 {
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        Console.WriteLine("Praca automatyczna zatrzymana przez flagę Stop.");
+                        break;
+                    }
+
                     robotArm.baseServo.move(point.baseServoPos); // ustawienie serva na pozycji podanej w punkcie
                     robotArm.j1Servo.move(point.j1ServoPos);
                     robotArm.j2Servo.move(point.j2ServoPos);
                     robotArm.gripperServo.move(point.gripperServoPos);
-                    await Task.Delay(3000); //odczekanie by robot byl wstanie osiagnac zadana pozycje
+
+                    await Task.Delay(3000, cancellationToken); // odczekanie by robot byl w stanie osiagnac zadana pozycje
                 }
 
-            }catch (Exception ex)
-            {
-                Console.WriteLine($"wystapil blad w pracy automatycznej{ex.ToString()}");
+                
+
             }
-          
-           
-
-            
+            catch (TaskCanceledException)
+            {
+                Console.WriteLine("Praca automatyczna została anulowana.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Wystąpił błąd w pracy automatycznej: {ex}");
+            }
         }
-
     }
 }

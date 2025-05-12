@@ -17,6 +17,7 @@ namespace espControl1
         private Form mainForm; //uchwyt fo formularza glownego
         private Thread sensingTh; // watek w ktorym obslugiwane sa sygnaly z sensorwo
         private AutoMode autoMode; // w klasie autoMode dostepne sa metody do programowania automatycznej pracy robota t.j. iteracji po zadanych punktach
+        private CancellationTokenSource cts; // Token source for stopping the AutoMode task
 
         private int baseRotation; // atrybut przechowujacy kat obrotu 1 podstawy robota
         private int j1Rotation;
@@ -40,10 +41,15 @@ namespace espControl1
 
             //przypisanie wartosci startowych poszczegolnych serv do trackbarow
             Thread.Sleep(500);
-            baseRot_trb.Value = robotArm.baseServo.GetServoPos();
-            j1Rot_trb.Value = robotArm.j1Servo.GetServoPos();
-            j2Rot_trb.Value = robotArm.j2Servo.GetServoPos();
-            grip_trb.Value = robotArm.gripperServo.GetServoPos();
+            baseRotation = robotArm.baseServo.GetServoPos();
+            baseRot_trb.Value = baseRotation;
+            j1Rotation = robotArm.j1Servo.GetServoPos();
+            j1Rot_trb.Value = j1Rotation;
+            j2Rotation = robotArm.j2Servo.GetServoPos();
+            j2Rot_trb.Value = j2Rotation;
+
+            gripper = robotArm.gripperServo.GetServoPos();
+            grip_trb.Value = gripper;
             //przypisanie tych wartosci do labels obok track barow
             baseRot_tb.Text = baseRot_trb.Value.ToString();
             j1Rot_tb.Text = j1Rot_trb.Value.ToString();
@@ -98,6 +104,7 @@ namespace espControl1
 
         private void addPos_bt_Click(object sender, EventArgs e)
         {
+
             autoMode.addPoint(baseRotation, j1Rotation, j2Rotation, gripper); //dodanie punktu do interpolacji do listy punktow w obiekcie autoMode
             ListViewItem point = new ListViewItem(autoMode.getLastIdx().ToString());
             point.SubItems.Add($"base: {baseRotation}, joint1: {j1Rotation}, joint2: {j2Rotation}");// dodanie punktu do listy punktow w gui
@@ -105,10 +112,28 @@ namespace espControl1
             points_lv.Items.Add(point);
         }
 
-        private void autoMode_bt_Click(object sender, EventArgs e)
+        private async void autoMode_bt_Click(object sender, EventArgs e)
         {
-            autoMode.LoopWork(robotArm); // wywolanie metody odp. za interpolacje po zadanych punktach
-            
+            if (cts != null)
+            {
+                cts.Cancel(); // Cancel any existing task if running
+                cts.Dispose();
+            }
+
+            cts = new CancellationTokenSource(); // Create a new token source
+            try
+            {
+                await autoMode.LoopWork(robotArm, cts.Token); // Pass the token to the LoopWork method
+            }
+            catch (OperationCanceledException)
+            {
+                Console.WriteLine("Praca automatyczna została zatrzymana.");
+            }
+            finally
+            {
+                cts.Dispose();
+                cts = null;
+            }
         }
 
         private void points_lv_SelectedIndexChanged(object sender, EventArgs e)
@@ -142,6 +167,39 @@ namespace espControl1
                     item.Remove();
                     autoMode.removePoint(int.Parse(item.Text));
                 }
+            }
+        }
+
+        private void stopBtn_Click(object sender, EventArgs e)
+        {
+            if (cts != null)
+            {
+                cts.Cancel(); // Signal cancellation
+                Console.WriteLine("Praca automatyczna zatrzymana przez użytkownika.");
+            }
+        }
+
+        private async void OneIterBtn_Click(object sender, EventArgs e)
+        {
+            if (cts != null)
+            {
+                cts.Cancel(); // Cancel any existing task if running
+                cts.Dispose();
+            }
+
+            cts = new CancellationTokenSource(); // Create a new token source
+            try
+            {
+                await autoMode.OneIteration(robotArm, cts.Token); // Pass the token to the LoopWork method
+            }
+            catch (OperationCanceledException)
+            {
+                Console.WriteLine("Praca automatyczna została zatrzymana.");
+            }
+            finally
+            {
+                cts.Dispose();
+                cts = null;
             }
         }
     }

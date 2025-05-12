@@ -55,6 +55,8 @@
             this.button2 = new System.Windows.Forms.Button();
             this.rmPointBtn = new System.Windows.Forms.Button();
             this.addPos_bt = new System.Windows.Forms.Button();
+            this.OneIterBtn = new System.Windows.Forms.Button();
+            this.stopBtn = new System.Windows.Forms.Button();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grip_trb)).BeginInit();
             this.groupBox3.SuspendLayout();
@@ -250,11 +252,12 @@
             this.autoMode_bt.BackColor = System.Drawing.Color.DodgerBlue;
             this.autoMode_bt.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.980198F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.autoMode_bt.ForeColor = System.Drawing.Color.White;
-            this.autoMode_bt.Location = new System.Drawing.Point(342, 475);
+            this.autoMode_bt.Location = new System.Drawing.Point(342, 474);
             this.autoMode_bt.Name = "autoMode_bt";
-            this.autoMode_bt.Size = new System.Drawing.Size(203, 45);
+            this.autoMode_bt.Size = new System.Drawing.Size(123, 45);
             this.autoMode_bt.TabIndex = 13;
-            this.autoMode_bt.Text = "Automatic Mode";
+            this.autoMode_bt.Text = "Start Loop Mode";
+            this.autoMode_bt.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.autoMode_bt.UseVisualStyleBackColor = false;
             this.autoMode_bt.Click += new System.EventHandler(this.autoMode_bt_Click);
             // 
@@ -267,7 +270,7 @@
             this.points_lv.HideSelection = false;
             this.points_lv.Location = new System.Drawing.Point(6, 19);
             this.points_lv.Name = "points_lv";
-            this.points_lv.Size = new System.Drawing.Size(309, 347);
+            this.points_lv.Size = new System.Drawing.Size(309, 428);
             this.points_lv.TabIndex = 14;
             this.points_lv.UseCompatibleStateImageBehavior = false;
             this.points_lv.View = System.Windows.Forms.View.List;
@@ -282,7 +285,7 @@
             this.groupBox5.Controls.Add(this.points_lv);
             this.groupBox5.Location = new System.Drawing.Point(467, 15);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(321, 423);
+            this.groupBox5.Size = new System.Drawing.Size(321, 453);
             this.groupBox5.TabIndex = 15;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Points:";
@@ -306,9 +309,9 @@
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.980198F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.button1.ForeColor = System.Drawing.SystemColors.Control;
             this.button1.Image = global::espControl1.Properties.Resources.arrow_down;
-            this.button1.Location = new System.Drawing.Point(380, 390);
+            this.button1.Location = new System.Drawing.Point(393, 424);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(65, 45);
+            this.button1.Size = new System.Drawing.Size(68, 45);
             this.button1.TabIndex = 19;
             this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.button1.UseVisualStyleBackColor = false;
@@ -319,7 +322,7 @@
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.980198F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.button2.ForeColor = System.Drawing.SystemColors.Control;
             this.button2.Image = global::espControl1.Properties.Resources.arrow_up;
-            this.button2.Location = new System.Drawing.Point(309, 390);
+            this.button2.Location = new System.Drawing.Point(322, 424);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(65, 45);
             this.button2.TabIndex = 18;
@@ -334,9 +337,9 @@
             this.rmPointBtn.ForeColor = System.Drawing.SystemColors.Control;
             this.rmPointBtn.Image = global::espControl1.Properties.Resources.rm_point;
             this.rmPointBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.rmPointBtn.Location = new System.Drawing.Point(157, 390);
+            this.rmPointBtn.Location = new System.Drawing.Point(159, 424);
             this.rmPointBtn.Name = "rmPointBtn";
-            this.rmPointBtn.Size = new System.Drawing.Size(141, 45);
+            this.rmPointBtn.Size = new System.Drawing.Size(164, 45);
             this.rmPointBtn.TabIndex = 17;
             this.rmPointBtn.Text = "Remove Selected";
             this.rmPointBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -350,7 +353,7 @@
             this.addPos_bt.ForeColor = System.Drawing.SystemColors.Control;
             this.addPos_bt.Image = global::espControl1.Properties.Resources.add_circle_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24;
             this.addPos_bt.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.addPos_bt.Location = new System.Drawing.Point(10, 390);
+            this.addPos_bt.Location = new System.Drawing.Point(12, 424);
             this.addPos_bt.Name = "addPos_bt";
             this.addPos_bt.Size = new System.Drawing.Size(141, 45);
             this.addPos_bt.TabIndex = 12;
@@ -359,11 +362,40 @@
             this.addPos_bt.UseVisualStyleBackColor = false;
             this.addPos_bt.Click += new System.EventHandler(this.addPos_bt_Click);
             // 
+            // OneIterBtn
+            // 
+            this.OneIterBtn.BackColor = System.Drawing.Color.DodgerBlue;
+            this.OneIterBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.980198F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.OneIterBtn.ForeColor = System.Drawing.Color.White;
+            this.OneIterBtn.Location = new System.Drawing.Point(473, 475);
+            this.OneIterBtn.Name = "OneIterBtn";
+            this.OneIterBtn.Size = new System.Drawing.Size(158, 45);
+            this.OneIterBtn.TabIndex = 20;
+            this.OneIterBtn.Text = "Do One Iteration";
+            this.OneIterBtn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.OneIterBtn.UseVisualStyleBackColor = false;
+            // 
+            // stopBtn
+            // 
+            this.stopBtn.BackColor = System.Drawing.Color.Red;
+            this.stopBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.841584F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.stopBtn.ForeColor = System.Drawing.SystemColors.Control;
+            this.stopBtn.Location = new System.Drawing.Point(637, 474);
+            this.stopBtn.Name = "stopBtn";
+            this.stopBtn.Size = new System.Drawing.Size(151, 45);
+            this.stopBtn.TabIndex = 21;
+            this.stopBtn.Text = "Stop Work";
+            this.stopBtn.UseMnemonic = false;
+            this.stopBtn.UseVisualStyleBackColor = false;
+            this.stopBtn.Click += new System.EventHandler(this.stopBtn_Click);
+            // 
             // FormTeachMode
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(804, 532);
+            this.Controls.Add(this.stopBtn);
+            this.Controls.Add(this.OneIterBtn);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.rmPointBtn);
@@ -425,5 +457,7 @@
         private System.Windows.Forms.Button rmPointBtn;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button OneIterBtn;
+        private System.Windows.Forms.Button stopBtn;
     }
 }
